@@ -9,19 +9,31 @@ var Users = Backbone.Collection.extend({
 
 var UserView = Backbone.View.extend({
     tagName: 'li',
-    // template: _.template( $("#userTemplate").html() ),
-    template: _.template("Name: <%= name %> Email: <%= email %>"),
+    template: _.template("Name: <%= name %>"),
     initialize: function(){
         this.listenTo(this.model, 'sync', this.render);
     },
     render: function(){
-        html = this.$el.html(this.template(this.model.toJSON()));
-        $('body').html(html);
+        this.$el.html(this.template(this.model.toJSON()));
         return this;
     }
 });
 
-var user = new User({id: 1});
-user.fetch();
-var userView = new UserView({model: user});
+var UsersView = Backbone.View.extend({
+    tagName: 'ul',
+    initialize: function(){
+        this.listenTo(this.collection, 'sync', this.render);
+    },
+    render: function(){
+        this.collection.each(this.addUser, this);
+        return this;
+    },
+    addUser: function(user){
+        var userView = new UserView({model: user});
+        $("body").append(this.$el.append(userView.render().el));
+    }
+});
 
+var users = new Users({})
+users.fetch()
+var usersView = new UsersView({collection: users});
