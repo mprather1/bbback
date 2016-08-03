@@ -9,16 +9,14 @@ var Users = Backbone.Collection.extend({
 
 var UserView = Backbone.View.extend({
     tagName: 'li',
-    // template: _.template("<%= email %>"),
+    // template: _.template( $("#userTemplate").html() ),
+    template: _.template("Name: <%= name %> Email: <%= email %>"),
     initialize: function(){
-        this.render();
+        this.listenTo(this.model, 'sync', this.render);
     },
     render: function(){
-        html = this.$el.html(this.model.get('name'));
-        
-        // html = this.$el.html(this.template(this.model.toJSON()));
+        html = this.$el.html(this.template(this.model.toJSON()));
         $('body').html(html);
-        $('body').append(this.model.get('email'))
         return this;
     }
 });
