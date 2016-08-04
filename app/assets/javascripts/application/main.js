@@ -1,3 +1,7 @@
+_.templateSettings = {
+    interpolate: /\{\{(.+?)\}\}/g
+};
+
 var User = Backbone.Model.extend({
     urlRoot: 'user'
 });
@@ -9,7 +13,7 @@ var Users = Backbone.Collection.extend({
 
 var UserView = Backbone.View.extend({
     tagName: 'li',
-    template: _.template("Name: <%= name %>"),
+    template: _.template($("#userTemplate").html()),
     initialize: function(){
         this.listenTo(this.model, 'sync', this.render);
     },
