@@ -38,6 +38,20 @@ var UsersView = Backbone.View.extend({
     }
 });
 
+var UserFormView = Backbone.View.extend({
+  tagName: 'form',
+  template: _.template($("#userForm").html()),
+  render: function(){
+    html = this.$el.html(this.template());
+    $('body').append(html);
+  }
+});
+
 var users = new Users({})
 users.fetch()
 var usersView = new UsersView({collection: users});
+var userFormView = new UserFormView({
+});
+$(function(){
+  userFormView.render();
+})
