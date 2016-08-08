@@ -27,6 +27,7 @@ var UsersView = Backbone.View.extend({
   tagName: 'ul',
   initialize: function(){
     this.listenTo(this.collection, 'sync', this.render);
+    // this.listenTo(this.collection, 'update', this.render);
   },
   render: function(){
     this.collection.each(this.addUser, this);
@@ -57,16 +58,47 @@ var UserFormView = Backbone.View.extend({
       email: $("#userEmail").val()
     }
     this.users.create(userAttrs);
+    usersRouter.navigate("/", {trigger: true});
+    this.users.fetch()
     return false;
   }
 });
 
-var users = new Users({})
-users.fetch()
-var usersView = new UsersView({collection: users});
-var userFormView = new UserFormView({
-  users: this.users 
+var UsersRouter = Backbone.Router.extend({
+  initialize: function(options){
+    this.users = options.users;
+    
+  },
+  routes: {
+    '': 'index'
+    
+  },
+  index: function(){
+    
+    var users = new Users({})
+    users.fetch()
+    var usersView = new UsersView({collection: users});
+    var userFormView = new UserFormView({
+      users: this.users 
+    });
+    $(function(){
+      userFormView.render();
+    })
+      }
 });
-$(function(){
-  userFormView.render();
-})
+
+var usersRouter = new UsersRouter({
+  users: new Users({collection: this.user })
+});
+
+Backbone.history.start({pushState: true});
+
+// var users = new Users({})
+// users.fetch()
+// var usersView = new UsersView({collection: users});
+// var userFormView = new UserFormView({
+//   users: this.users 
+// });
+// $(function(){
+//   userFormView.render();
+// })
